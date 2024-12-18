@@ -1,0 +1,62 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run a single day",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\adventofcode\\manage.py",
+            "console": "integratedTerminal",
+            "args": ["day10"],
+            "cwd": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\adventofcode"
+        },
+        {
+            "name": "Python : op_model",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack\\manage.py",
+            "console": "integratedTerminal",
+            "args": ["op_risk_model"],
+            "cwd": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack"
+        },
+        {
+
+            "name": "Python: get dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack\\manage.py",
+            "console": "integratedTerminal",
+            "args": ["barrier_get_dataset"],
+            "cwd": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack"
+        },
+        {
+            "name": "Python debugger: current file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack"
+        },
+        {
+            "name": "Python debugger: convert_rvm",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack\\manage.py",
+            "console": "integratedTerminal",
+            "args": ["convert_rvm"],
+            "cwd": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack"
+        },
+        {
+            "name": "Python debugger: alvheim rca",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack\\jack\\manage.py",
+            "console": "integratedTerminal",
+            "args": ["alv_rca_jockey", "data/intermediate/alv_jockey_running_time.csv"],
+            "cwd": "C:\\Users\\petell\\OneDrive - Aker BP\\Documents\\Python\\jack"
+        }
+
+
+
+    ]
+}

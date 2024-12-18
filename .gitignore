@@ -1,0 +1,10 @@
+
+# Folders I don't want to commit
+data/
+db/
+notebooks/
+
+# Files I don't want to commit
+**.pyc
+Log
+QA_LOG
