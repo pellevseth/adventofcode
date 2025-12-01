@@ -89,7 +89,11 @@ def add_command_parsers(parser, logparser):
     max_length = max([len(a) for a in available_commands])
     for command in available_commands:
         child_parser = subparsers.add_parser(command, parents=[logparser])
-        call = importlib.import_module('functions.%s'%  command)
+        try:
+            call = importlib.import_module('functions.%s'%  command)
+        except ImportError:
+            logger.error(f'Not able to import {command}')
+            continue
         if hasattr(call, 'set_argparser'):
             call.set_argparser(child_parser)
         else:
