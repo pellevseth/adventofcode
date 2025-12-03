@@ -21,7 +21,7 @@ def main(*args, **kwargs):
     low = 0
     high = 99
     span = (high - low) + 1
-    dial = np.arange(low, high + 1)
+    # dial = np.arange(low, high + 1)
 
     pos = 50
 
@@ -29,7 +29,6 @@ def main(*args, **kwargs):
     p = re.compile(pattern)
 
     count = 0
-    count_intermediate = 0
     count_pass = 0
 
     data = list()
@@ -40,47 +39,47 @@ def main(*args, **kwargs):
         # Check pos before rotating
         pos0 = pos
 
+        # Parse rotation
         direction = 1 if m.group('direction') == 'R' else -1
         distance = int(m.group('distance'))
-        pos = pos + distance * direction
 
-        if pos == high + 1:
-            pos = low
-        elif low <= pos <= high:
+        # How many rounds are we rotating
+        n_rounds = floor(distance / span)
+
+        # Rest
+        rest = distance - n_rounds * span
+
+        placements = [pos0 for n in range(0, n_rounds + 1)]
+        pos = pos0 + direction * rest
+
+        if low <= pos <= high:
             pass
-        else:
-            if pos < low:
-                d = 1
-            elif pos > high:
-                d = -1
-            while pos < low or pos > high:
-                pos = pos + d * span
-                if pos < low:
-                    d = 1
-                elif pos > high:
-                    d = -1
-
-                if pos == 0:
-                    count_intermediate = count_intermediate + 1
+        elif pos == high + 1:
+            pos = low
+        elif pos < low:
+            pos = pos + span
+            if pos0 != low:
                 count_pass = count_pass + 1
+        elif pos > high:
+            pos = pos - span
+            count_pass = count_pass + 1
 
-            # Correct if we started at zero
-            if pos0 == 0:
-                count_pass = count_pass - 1
+        placements.append(pos)
+        logger.info(','.join(map(str, placements)))
 
-        if dial[pos] == 0:
+        count_pass = count_pass + n_rounds
+        if placements[-1] == low:
             count = count + 1
 
-        logger.info(f'rot: {rotation} pos:{pos} count:{count} count_pass:{count_pass}')
-        data.append({'rot': rotation, 'pos0': pos0, 'pos': pos, 'distance': distance, 'count': count,
-                     'count_intermediate': count_intermediate, 'count_pass': count_pass})
+        logger.info(f'rot: {rotation} pos0: {pos0} pos:{pos} count:{count} count_pass:{count_pass}')
+        data.append({'rot': rotation, 'pos0': pos0, 'pos': pos, 'distance': distance,
+                     'count': count, 'count_pass': count_pass})
 
     df = pd.DataFrame(data)
     df['passes'] = df['count_pass'] - df['count_pass'].shift(1)
     logger.info(f'Finished, found {count} zeros')
     logger.info(f'Finished, passed zero {count_pass} times')
-    logger.info(f'Finished, intermediate stops {count_intermediate} times')
-    logger.info(f'New password {count + count_pass + count_intermediate}')
+    logger.info(f'New password {count + count_pass}')
 
     logger.info('Finished')
 
@@ -89,10 +88,3 @@ def read_input(fp):
     with open(fp, 'r') as ifile:
         lines = ifile.readlines()
     return lines
-
-def how_many_rounds(distance, span):
-
-    # Antall hele runder
-    c = floor(distance / span)
-
-    return c
