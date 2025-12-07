@@ -44,7 +44,17 @@ class BaseGrid:
     
     def find_coordinates_of_marker(self, marker):
         return np.where(self.data == marker)
-    
+
+    def get_neighbours(self, r, c):
+        """
+        Get the neighbouts from coordinate r, c
+        """
+        r_low = np.clip(r-1, a_min=self.r_low, a_max=self.r_high)
+        r_high = np.clip(r+1, a_min=self.r_low, a_max=self.r_high)
+        c_low = np.clip(c-1, a_min=self.c_low, a_max=self.c_high)
+        c_high = np.clip(c+1, a_min=self.c_low, a_max=self.c_high)
+        return self.data[r_low:r_high+1,c_low:c_high+1]
+
     def point_within(self, p):
         within = True
 
@@ -127,7 +137,6 @@ class GridPath:
     
     def get_linestring(self):
         return LineString([p.position for p in self.points])
-
 
 
 class GridPosition:

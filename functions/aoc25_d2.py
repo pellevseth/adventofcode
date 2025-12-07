@@ -25,36 +25,29 @@ def main(*args, **kwargs):
         v0 = int(n0)
         v1 = int(n1)
 
-        first_part_prev = None
+        # Sjekker alle sub-strenger for opptil halve lengden av den lengste
+        for id in map(str, range(v0, v1+1)):
 
-        while v0 <= v1:
-            # Digits in first number
-            l0 = len(n0)
+            len_id = len(id)
 
-            if l0 % 2 == 0:
+            # Ser på lengde av streng
+            N = 1
 
-                # Get the first part
-                first_part = n0[0:l0 // 2]
-                # We only need to check each first part once
-                if first_part_prev == first_part:
-                    v0 = v0 + 1
-                    n0 = str(v0)
+            # Check if we can divide into equal or if length we are checking is more than half the length
+            while N <= len_id // 2:
+                if len_id % N != 0:
+                    N = N + 1
                     continue
-                first_part_prev = first_part
+                sub_string = id[0:N]
+                ret = re.findall(sub_string, id)
 
-                # Make a value to check for
-                value = int(f'{first_part}{first_part}')
-
-                if v0 <= value <= v1:
-                    data.append({'value': value, 'range': r})
-
-            # Increment
-            v0 = v0 + 1
-            n0 = str(v0)
-
+                # Add if we found the same number as the number of substrings we are checking
+                if sub_string * (len_id // N) == id:
+                    data.append({'value': int(id), 'range': r})
+                N = N + 1
 
     df = pd.DataFrame(data)
-    logger.info('The answer is {}'.format(df.value.sum()))
+    logger.info('The answer is {}'.format(df.drop_duplicates().value.sum()))
     logger.info('Finished')
 
 
