@@ -5,6 +5,7 @@
 """
 
 import logging
+from math import floor
 
 import numpy as np
 import pandas as pd
@@ -12,7 +13,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 def main(*args, **kwargs):
-    fp = 'data/raw/aoc_2025_day5_example.txt'
+    fp = 'data/raw/aoc_2025_day5.txt'
     ranges, ingredients = read_input(fp)
 
     # Make array of the ranges, flatten so we can use searchsorted
@@ -31,15 +32,11 @@ def main(*args, **kwargs):
     logger.info('Part one, found {} fresh ingredients'.format(len(idx)))
 
     # Part two
-    df = pd.DataFrame(ranges, columns=['start', 'stop']).sort_values('start')
-    df['start_next'] = df.start.shift(-1).astype(np.int64)
-    df['count'] = df.stop - df.start + 1
-    df['overlap'] = df.apply(lambda r: calculate_overlap(r), axis=1)
-    df['count_all'] = df['count'] - df['overlap']
+
 
     logger.info('Part two found {} IDs'.format(df.count_all.sum()))
-    with open('data/processed/aoc_2025_d5_res.csv', 'w') as ofile:
-        df.to_csv(ofile, index=False)
+    #with open('data/processed/aoc_2025_d5_res.csv', 'w') as ofile:
+    #    df.to_csv(ofile, index=False)
     logger.info('Finished')
 
 
@@ -50,6 +47,50 @@ def calculate_overlap(row):
     else:
         return row['stop'] - row['start_next'] + 1
 
+def part_two(ranges):
+    df = pd.DataFrame(ranges, columns=['start', 'stop']).sort_values('start')
+
+    # Looping until we have no more to combine
+    r3 = df.values
+    N_merges = 0
+    data = list()
+
+    while True:
+
+        new = list()
+
+        N_pairs = floor(len(r3) / 2)
+        for i in range(N_pairs):
+
+            r0 = r3[2 * i]
+            r1 = r3[2 * i + 1]
+
+            if r1[0] <= r0[1]:
+                new.append((min(r0[0], r1[0]),
+                            max(r1[1], r1[1])))
+                N_merges = N_merges + 1
+            else:
+                new.append(r0)
+                new.append(r1)
+
+        if len(r3) % 2 != 0:
+            r0 = new[-1]
+            r1 = r3[-1]
+
+            if r1[0] <= r0[1]:
+                new.pop()
+                new.append((min(r0[0], r1[0]),
+                            max(r1[1], r1[1])))
+                N_merges = N_merges + 1
+            else:
+                new.append(r1)
+
+        data.append({'len_r3': len(r3), 'N_merges': N_merges})
+
+        if N_merges == 0:
+            break
+        N_merges = 0
+        r3 = new
 def read_input(fp):
     ranges = list()
     ingredients = list()
