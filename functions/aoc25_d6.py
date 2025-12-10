@@ -39,15 +39,14 @@ def part_one(values, operators):
     return sum(res)
 
 def part_two(data):
-    a = np.array(data)
-    values = a[:,:-1,:]
-    operators = a[:,-1,:]
 
     res = list()
-    for idx, op in enumerate(operators):
-        a2 = values[idx]
-        v = [int(''.join(a2[:,c])) for c in range(a2.shape[0])]
-        res.append(parse_operator(op[0])(v))
+    for part in data:
+        values = np.array(part[:-1])
+        op = part[-1][0]
+
+        v = [int(''.join(values[:,c])) for c in range(values.shape[1])]
+        res.append(parse_operator(op)(v))
 
     return sum(res)
 
