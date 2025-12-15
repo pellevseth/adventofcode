@@ -33,9 +33,9 @@ class BaseGrid:
         self.data = data
 
         self.r_low = 0
-        self.r_high = self.data.shape[0]
+        self.r_high = self.data.shape[0] - 1
         self.c_low = 0
-        self.c_high = self.data.shape[1]
+        self.c_high = self.data.shape[1] - 1
     
     def find_unique(self):
         # Return array of unique markers in the grid given a specified 'open space' to be ignored
@@ -145,19 +145,22 @@ class GridPosition:
         self.grid = grid
 
         if self.grid:
-            self.within = self.grid.point_within(self.position)
-    
-    def step(self, direction):
-        self.position = np.array(list(map(lambda i, j: i + j, self.position, direction)))
-        
-        # Check if we are within a given grid
-        self.within = self.grid.point_within(self.position)
-        if self.within:
-            ret = 0
-        else:
-            ret = 1
+            self.is_within = self.grid.point_within(self.position)
 
-        return ret
+
+    def __str__(self):
+        return '({0},{1})'.format(self.position[0], self.position[1])
+
+    def __repr__(self):
+        return '({0},{1})'.format(self.position[0], self.position[1])
+
+    def step(self, direction):
+        """
+        direction - tuple with direction we are stepping
+        """
+
+        return GridPosition(tuple(map(lambda i, j: i + j, self.position, direction)), grid=self.grid)
+
 
 
 class GuardState:
