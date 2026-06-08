@@ -21,6 +21,8 @@ class MovementObject:
 
         self.grid = grid
 
+        self.path = [self.position.position]
+
     def __str__(self):
         return f'{self.position}'
 
@@ -29,6 +31,7 @@ class MovementObject:
 
         p0 = self.position
         keep_walking = True
+        impact = False
         steps = 0
         while keep_walking:
 
@@ -37,13 +40,18 @@ class MovementObject:
             if not next_step.is_within:
                 break
 
+            self.path.append(next_step.position)
+
             if next_step:
                 if self.grid.data[next_step.position] == obstacle:
                     steps = steps + 1
                     self.position = next_step
+                    impact = True
                     break
 
             steps = steps + 1
             self.position = next_step
 
-        logger.info(f'Walked {steps} steps from {p0} to {self.position}')
+        logger.info(f'Walked {steps} steps from {p0} to {self.position} {impact}')
+
+        return impact
